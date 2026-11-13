@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Cards</title>
+  <link rel="stylesheet" href="output.css">
+  <link rel="icon" type="image/svg+xml" href="logo-icon.svg">
+
+  <!-- Set the theme before first paint (no flash). A saved choice wins, otherwise follow the OS. -->
+  <script>
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (e) {}
+      var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', dark);
+    })();
+  </script>
+
+  <style>
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+    }
+
+    /* Scroll progress bar (only where scroll-driven animations are supported) */
+    #track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      z-index: 9999;
+      background: linear-gradient(to right, #22d3ee, #0ea5e9);
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+    @supports (animation-timeline: scroll()) {
+      #track { animation: track linear both; animation-timeline: scroll(); }
+    }
+    @keyframes track { to { transform: scaleX(1); } }
+
+    /* Reveal-on-scroll for every card on phones (not just the 4th), skipped for reduced motion */
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: none; }
+    }
+    @media (prefers-reduced-motion: no-preference) and (max-width: 639px) {
+      @supports (animation-timeline: view()) {
+        .reveal {
+          animation: reveal ease both;
+          animation-timeline: view();
+          animation-range: entry 0% entry 60%;
+        }
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
+  <div id="track" aria-hidden="true"></div>
+
+  <!-- Header lives OUTSIDE the card layout so it can't distort the page height -->
+  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-lg dark:border-white/10 dark:bg-slate-950/80">
+    <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6" aria-label="Main">
+      <a href="#" class="flex items-center gap-2 text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <img src="logo-icon.svg" alt="" class="h-8 w-8">
+        <span>Responsive <span class="text-sky-700 dark:text-sky-300">Cards</span></span>
+      </a>
+
+      <button id="theme-toggle" type="button" aria-label="Toggle theme" aria-pressed="false" title="Toggle theme"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-700 transition hover:bg-slate-100  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 dark:border-white/15 dark:text-slate-200 dark:hover:bg-white/10">
+        <!-- Moon (shown in light mode) -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 dark:hidden" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+        </svg>
+        <!-- Sun (shown in dark mode) -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hidden size-5 dark:block" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+        </svg>
+      </button>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
+    <h1 class="sr-only">Responsive cards</h1>
+
+    <!-- 1 column on phones, 2 on tablets/small laptops, 4 on wide screens. Nothing is ever hidden. -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+
+      <!-- Card 1 -->
+      <div class="reveal">
+        <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 dark:border-white/10 dark:bg-slate-800/70 dark:hover:border-cyan-400/40">
+          <img src="Designer (4).png" alt="Layered sandstone canyon walls in warm orange light" loading="lazy" decoding="async" class="aspect-16/10 w-full object-cover">
+          <div class="flex flex-1 flex-col gap-3 p-6">
+            <h2 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">First card</h2>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi quibusdam perspiciatis non quaerat eaque voluptatum quasi officia nobis sequi quis?</p>
+            <div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3 pt-4">
+              <a href="#" class="inline-flex h-10 items-center rounded-lg bg-cyan-700 px-5 text-sm font-semibold text-white transition hover:bg-cyan-800  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 dark:bg-cyan-400 dark:text-slate-950 dark:hover:bg-cyan-300">Get started</a>
+              <a href="#" class="rounded text-sm font-medium text-cyan-700 underline-offset-4 hover:underline  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 dark:text-cyan-300">Learn more <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="reveal">
+        <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 dark:border-white/10 dark:bg-slate-800/70 dark:hover:border-cyan-400/40">
+          <img src="eren-yildiz-3SbzEAAXYWs-unsplash.jpg" alt="Glowing purple nebula inside a dark rounded capsule" loading="lazy" decoding="async" class="aspect-16/10 w-full object-cover">
+          <div class="flex flex-1 flex-col gap-3 p-6">
+            <h2 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Second card</h2>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi quibusdam perspiciatis non quaerat eaque voluptatum quasi officia nobis sequi quis?</p>
+            <div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3 pt-4">
+              <a href="#" class="inline-flex h-10 items-center rounded-lg bg-cyan-700 px-5 text-sm font-semibold text-white transition hover:bg-cyan-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 dark:bg-cyan-400 dark:text-slate-950 dark:hover:bg-cyan-300">Get started</a>
+              <a href="#" class="rounded text-sm font-medium text-cyan-700 underline-offset-4 hover:underline  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 dark:text-cyan-300">Learn more <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="reveal">
+        <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 dark:border-white/10 dark:bg-slate-800/70 dark:hover:border-cyan-400/40">
+          <img src="mavis-hopper-8Um6X9Zg8AA-unsplash.jpg" alt="Chrome liquid rippling around a glass sphere" loading="lazy" decoding="async" class="aspect-16/10 w-full object-cover">
+          <div class="flex flex-1 flex-col gap-3 p-6">
+            <h2 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Third card</h2>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi quibusdam perspiciatis non quaerat eaque voluptatum quasi officia nobis sequi quis?</p>
+            <div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3 pt-4">
+              <a href="#" class="inline-flex h-10 items-center rounded-lg bg-cyan-700 px-5 text-sm font-semibold text-white transition hover:bg-cyan-800  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 dark:bg-cyan-400 dark:text-slate-950 dark:hover:bg-cyan-300">Get started</a>
+              <a href="#" class="rounded text-sm font-medium text-cyan-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 dark:text-cyan-300">Learn more <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="reveal">
+        <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 dark:border-white/10 dark:bg-slate-800/70 dark:hover:border-cyan-400/40">
+          <img src="leftfield-corn-0feWcMBMYcU-unsplash.jpg" alt="Swirling red and silver metallic folds" loading="lazy" decoding="async" class="aspect-16/10 w-full object-cover">
+          <div class="flex flex-1 flex-col gap-3 p-6">
+            <h2 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Fourth card</h2>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi quibusdam perspiciatis non quaerat eaque voluptatum quasi officia nobis sequi quis?</p>
+            <div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3 pt-4">
+              <a href="#" class="inline-flex h-10 items-center rounded-lg bg-cyan-700 px-5 text-sm font-semibold text-white transition hover:bg-cyan-800  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 dark:bg-cyan-400 dark:text-slate-950 dark:hover:bg-cyan-300">Get started</a>
+              <a href="#" class="rounded text-sm font-medium text-cyan-700 underline-offset-4 hover:underline  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 dark:text-cyan-300">Learn more <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const root = document.documentElement;
+    const btn = document.getElementById('theme-toggle');
+    const sync = () => btn.setAttribute('aria-pressed', String(root.classList.contains('dark')));
+
+    sync();
+    btn.addEventListener('click', () => {
+      const dark = root.classList.toggle('dark');
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+      sync();
+    });
+  </script>
+</body>
+</html>
